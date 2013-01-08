@@ -1,0 +1,4 @@
+nose
+Jinja2
+docutils
+

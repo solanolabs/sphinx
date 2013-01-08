@@ -1,0 +1,7 @@
+tddium:
+ python:
+  python_version: 2.7
+  pip_requirements_file: requirements.txt
+ tests:
+  - type: nosetests
+    mode: safe-mode
