@@ -114,6 +114,8 @@ def generate_lines(text):
 def load_grammar(gt="Grammar.txt", gp=None,
                  save=True, force=False, logger=None):
     """Load the grammar (maybe from a pickle)."""
+    if os.getenv('TDDIUM'):
+        return pgen.generate_grammar(gt)
     if logger is None:
         logger = logging.getLogger()
     if gp is None:
