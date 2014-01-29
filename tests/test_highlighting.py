@@ -13,39 +13,38 @@ from util import *
 
 try:
     import pygments
+
+    from pygments.lexer import RegexLexer
+    from pygments.token import Text, Name
+    from pygments.formatters.html import HtmlFormatter
+
+    from sphinx.highlighting import PygmentsBridge
+
+    class MyLexer(RegexLexer):
+        name = 'testlexer'
+
+        tokens = {
+            'root': [
+                ('a', Name),
+                ('b', Text),
+            ],
+        }
+
+
+    class MyFormatter(HtmlFormatter):
+        def format(self, tokensource, outfile):
+            for tok in tokensource:
+                outfile.write(tok[1])
+
+
+    class ComplainOnUnhighlighted(PygmentsBridge):
+        def unhighlighted(self, source):
+            raise AssertionError("should highlight %r" % source)
+
 except ImportError:
-    from nose.plugins.skip import SkipTest
-    raise SkipTest('pygments not available')
+    pass
 
-from pygments.lexer import RegexLexer
-from pygments.token import Text, Name
-from pygments.formatters.html import HtmlFormatter
-
-from sphinx.highlighting import PygmentsBridge
-
-
-class MyLexer(RegexLexer):
-    name = 'testlexer'
-
-    tokens = {
-        'root': [
-            ('a', Name),
-            ('b', Text),
-        ],
-    }
-
-
-class MyFormatter(HtmlFormatter):
-    def format(self, tokensource, outfile):
-        for tok in tokensource:
-            outfile.write(tok[1])
-
-
-class ComplainOnUnhighlighted(PygmentsBridge):
-    def unhighlighted(self, source):
-        raise AssertionError("should highlight %r" % source)
-
-
+@skip_unless_importable('pygments', 'needs pygments installed')
 @with_app()
 def test_add_lexer(app):
     app.add_lexer('test', MyLexer())
@@ -54,6 +53,7 @@ def test_add_lexer(app):
     ret = bridge.highlight_block('ab', 'test')
     assert '<span class="n">a</span>b' in ret
 
+@skip_unless_importable('pygments', 'needs pygments installed')
 def test_detect_interactive():
     bridge = ComplainOnUnhighlighted('html')
     blocks = [
@@ -66,6 +66,7 @@ def test_detect_interactive():
         ret = bridge.highlight_block(block.lstrip(), 'python')
         assert ret.startswith("<div class=\"highlight\">")
 
+@skip_unless_importable('pygments', 'needs pygments installed')
 def test_set_formatter():
     PygmentsBridge.html_formatter = MyFormatter
     try:
@@ -75,6 +76,7 @@ def test_set_formatter():
     finally:
         PygmentsBridge.html_formatter = HtmlFormatter
 
+@skip_unless_importable('pygments', 'needs pygments installed')
 def test_trim_doctest_flags():
     PygmentsBridge.html_formatter = MyFormatter
     try:

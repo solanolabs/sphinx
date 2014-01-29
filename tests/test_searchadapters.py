@@ -12,8 +12,6 @@
 import os, sys
 from StringIO import StringIO
 
-from nose import SkipTest
-
 from sphinx.websupport import WebSupport
 
 from test_websupport import sqlalchemy_missing
