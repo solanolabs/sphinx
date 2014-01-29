@@ -12,6 +12,7 @@ import StringIO
 import tempfile
 import shutil
 import re
+import atexit
 from codecs import open
 
 try:
@@ -38,8 +39,15 @@ __all__ = [
 ]
 
 
-test_root = path(__file__).parent.joinpath('root').abspath()
-test_roots = path(__file__).parent.joinpath('roots').abspath()
+def _copy_root(src):
+    tmpdir = path(tempfile.mkdtemp())
+    dst = tmpdir / src.base
+    shutil.copytree(src, dst)
+    atexit.register(shutil.rmtree, tmpdir)
+    return dst
+
+test_root = _copy_root(path(__file__).parent.joinpath('root').abspath())
+test_roots = _copy_root(path(__file__).parent.joinpath('roots').abspath())
 
 
 def _excstr(exc):

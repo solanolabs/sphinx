@@ -34,6 +34,13 @@ class path(unicode):
         """
         return self.__class__(os.path.dirname(self))
 
+    @property
+    def base(self):
+        """
+        The base name of the directory or file.
+        """
+        return self.__class__(os.path.basename(self))
+
     def abspath(self):
         """
         Returns the absolute path.
