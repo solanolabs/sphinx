@@ -4,7 +4,7 @@ README for Sphinx
 
 Installing
 ==========
-
+ 
 Use ``setup.py``::
 
    python setup.py build
